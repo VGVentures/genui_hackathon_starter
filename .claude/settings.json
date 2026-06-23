@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__plugin_vgv-ai-flutter-plugin_dart__analyze_files",
+      "mcp__plugin_vgv-ai-flutter-plugin_dart__rip_grep_packages",
+      "mcp__plugin_vgv-ai-flutter-plugin_dart__read_package_uris",
+      "Bash(flutter analyze *)"
+    ]
+  }
+}
