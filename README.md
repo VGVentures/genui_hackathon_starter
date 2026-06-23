@@ -1,10 +1,3 @@
-<p align="center">
-  <a href="https://verygood.ventures">
-    <img src="https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_black.png#gh-light-mode-only" width="300" alt="Very Good Ventures" />
-    <img src="https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_white.png#gh-dark-mode-only" width="300" alt="Very Good Ventures" />
-  </a>
-</p>
-
 # GenUI Hackathon Starter 🦄
 
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
