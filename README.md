@@ -5,34 +5,34 @@
 
 A starter Flutter app for building **Generative UI** (GenUI) experiences. Instead of the model replying with plain text, it replies with a _user interface_: buttons, lists, cards, forms, and more, rendered live as real Flutter widgets.
 
-This template wires up Google's Gemini model to Flutter's [`genui`](https://pub.dev/packages/genui) package so you can start shaping that experience right away. You bring two things: a **catalog** of widgets the model is allowed to use, and a **system prompt** that tells it how to behave. The template handles everything in between.
+This template wires up Google's Gemini model to Flutter's [`genui`](https://pub.dev/packages/genui) package so you can start shaping that experience right away.
 
-New to GenUI? That's fine. This README walks you through it from scratch, including installing Flutter.
+**You bring _two_ things** — the Template handles everything in between:
+> 1. a **catalog** — the list of widgets the model is allowed to use.
+> 2. a **system prompt** — describing each widget's behavior to the model.
+>
+> 📝 Due to the **catalog** is shared between the Renderer and the Model, your App can never be asked to draw a Widget it doesn't know about.
+
+The Template is the plumbing between your two inputs, Gemini, and the screen:
+> The two knobs you'll touch most are:
+> 1. **`lib/catalog.dart`** — _what_ the model can build (the widget vocabulary).
+> 2. **`lib/prompt.dart`** — _how_ the model should behave (persona, tone, rules).
 
 ---
 
 ## What is GenUI, in one minute
 
-A normal chat app sends your message to a model and gets text back. GenUI sends your message to a model and gets back a structured description of a UI (in a format called **A2UI**, "agent-to-UI"). The `genui` package turns that description into live Flutter widgets on screen.
-
-The model can only ever describe widgets you've told it about. That list of allowed widgets is the **catalog**. Because the same catalog is fed to the model _and_ used to render, the model can never ask for something your app can't draw.
-
-So the two knobs you'll touch most are:
-
-- **`lib/catalog.dart`** — _what_ the model can build (the widget vocabulary).
-- **`lib/prompt.dart`** — _how_ the model should behave (persona, tone, rules).
-
-Everything else in this template is plumbing that connects those two things to Gemini and to the screen.
+While both the typical chat experience and GenUI share the same Request flow: send a message, await a response, GenUI diverges in its Response output; this _structure_ is known as **A2UI** ("agent-to-UI"): composing the Response as a _description_ of UI rather than plain text. When pairing that _description_ with the `genui` package we begin to see how this transformation of input returns applicable, live Flutter widgets on screen!
 
 ---
 
 ## Getting started
+> New to **GenUI**? No worries, this guide starts from scratch, including Flutter installation!
 
-This section assumes you have **never installed Flutter**. We'll run the app on **macOS** as a native desktop app. (You're on a Mac, so this is the quickest path. No simulators or devices needed.)
+This section assumes you have **never installed Flutter** -- macOS
+> we'll run the app as a native macOS desktop app. No simulators nor devices needed!
 
 ### 1. Install Flutter
-
-The easiest way on macOS is via the official installer.
 
 1. Install [Xcode](https://apps.apple.com/us/app/xcode/id497799835) from the App Store (required to build macOS apps). After it installs, open it once so it can finish setting up, then run:
    ```sh
@@ -49,11 +49,12 @@ The easiest way on macOS is via the official installer.
    ```
    You want green checkmarks for **Flutter** and **Xcode** at minimum. Don't worry if Android/Chrome show warnings; you don't need them for macOS.
 
-This project targets the Flutter SDK that ships **Dart `^3.12.1`** (see [pubspec.yaml](pubspec.yaml)). If `flutter doctor` reports an older Dart, run `flutter upgrade`.
+This project targets the Flutter SDK that ships **Dart `^3.12.1`** (see [pubspec.yaml](pubspec.yaml)).
+> If `flutter doctor` reports an older Dart, run `flutter upgrade`.
 
 ### 2. Get a Gemini API key
 
-The app talks to Google's Gemini model, which needs an API key.
+> The app talks to Google's Gemini model, which needs an API key.
 
 1. Go to [Google AI Studio](https://aistudio.google.com/apikey).
 2. Sign in and click **Create API key**.
@@ -71,7 +72,7 @@ flutter pub get
 
 ### 4. Run the app on macOS
 
-Enable macOS desktop support once (harmless if already enabled):
+> Enable macOS desktop support once (harmless if already enabled):
 
 ```sh
 flutter config --enable-macos-desktop
