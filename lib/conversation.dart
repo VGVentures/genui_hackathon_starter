@@ -55,6 +55,9 @@ class GenUiSession {
   ValueListenable<ConversationState> get conversationState =>
       _conversation.state;
 
+  /// A stream of conversation events (surface changes, content, errors).
+  Stream<ConversationEvent> get events => _conversation.events;
+
   /// Sends a user message to the model and starts the conversation.
   void sendMessage(String text) =>
       _conversation.sendRequest(ChatMessage.user(text));

@@ -1,12 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:genui/genui.dart';
 import 'package:genui_template/catalog.dart';
 import 'package:genui_template/conversation.dart';
-import 'package:genui_template/model/gemini_model_client.dart';
+import 'package:genui_template/model/featherless_model_client.dart';
 import 'package:genui_template/widgets/widgets.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key}) : _sessionOverride = null;
+
+  /// Test-only constructor that bypasses the default session creation.
+  @visibleForTesting
+  const HomePage.withSession(GenUiSession session, {super.key})
+    : _sessionOverride = session;
+
+  final GenUiSession? _sessionOverride;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -14,7 +23,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late final GenUiSession _session;
-  final textController = TextEditingController();
+  final _textController = TextEditingController();
+  StreamSubscription<ConversationEvent>? _eventsSub;
 
   @override
   void initState() {
@@ -27,15 +37,28 @@ class _HomePageState extends State<HomePage> {
 
     // The session owns the whole GenUI pipeline (model client, controller,
     // transport, and conversation) and disposes it as a unit.
-    _session = GenUiSession(
-      catalog: catalog,
-      modelClient: GeminiModelClient(catalog: catalog),
-    );
+    _session =
+        widget._sessionOverride ??
+        GenUiSession(
+          catalog: catalog,
+          modelClient: FeatherlessModelClient(catalog: catalog),
+        );
+
+    // Surface model/transport failures the GenUI pipeline would otherwise
+    // swallow. Featherless 401/400/503 errors are routine during development.
+    _eventsSub = _session.events.listen((event) {
+      if (event is ConversationError && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Request failed: ${event.error}')),
+        );
+      }
+    });
   }
 
   @override
   void dispose() {
-    textController.dispose();
+    unawaited(_eventsSub?.cancel());
+    _textController.dispose();
     _session.dispose();
     super.dispose();
   }
@@ -45,7 +68,7 @@ class _HomePageState extends State<HomePage> {
   void sendMessage(String text) {
     if (text.trim().isEmpty) return;
     _session.sendMessage(text);
-    textController.clear();
+    _textController.clear();
   }
 
   @override
@@ -101,7 +124,7 @@ class _HomePageState extends State<HomePage> {
               // Show a thinking indicator while the model streams its response.
               if (isProcessing) const LinearProgressIndicator(minHeight: 2),
               MessageInput(
-                controller: textController,
+                controller: _textController,
                 isProcessing: isProcessing,
                 onSend: sendMessage,
               ),
